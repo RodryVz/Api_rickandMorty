@@ -47,7 +47,7 @@ const EpisodioDetalles = (): JSX.Element => {
                 .then((personajesData: Character[]) => {
                     setPersonajes(personajesData);
                 })
-                .catch((error) => {
+                .catch(() => {
                     setError('Error al cargar los detalles de los personajes.');
                 });
         } catch (error) {
