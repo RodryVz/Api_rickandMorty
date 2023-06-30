@@ -10,7 +10,7 @@ interface Ubicacion {
 
 const UbicacionDetalle = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
-    const [ubicacion, setUbicacion] = useState<Ubicacion>({});
+    const [ubicacion, setUbicacion] = useState<Ubicacion | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -48,11 +48,11 @@ const UbicacionDetalle = (): JSX.Element => {
                 <div className="col-md-6">
                     <div className="card mt-5">
                         <div className="card-body">
-                            <h5 className="card-title">{ubicacion.name}</h5>
+                            <h5 className="card-title">{ubicacion?.name}</h5>
                             <hr />
-                            <p className="card-text">Tipo: {ubicacion.type}</p>
-                            <p className="card-text">Dimensión: {ubicacion.dimension}</p>
-                            <p className="card-text">Fecha de creación: {ubicacion.created}</p>
+                            <p className="card-text">Tipo: {ubicacion?.type}</p>
+                            <p className="card-text">Dimensión: {ubicacion?.dimension}</p>
+                            <p className="card-text">Fecha de creación: {ubicacion?.created}</p>
                             <Link to="/ubicaciones" className="btn btn-primary">Volver a las ubicaciones</Link>
                         </div>
                     </div>
