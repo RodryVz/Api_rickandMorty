@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-const UbicacionDetalle = () => {
-    const { id } = useParams();
-    const [ubicacion, setUbicacion] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+interface Ubicacion {
+    name: string;
+    type: string;
+    dimension: string;
+    created: string;
+}
+
+const UbicacionDetalle = (): JSX.Element => {
+    const { id } = useParams<{ id: string }>();
+    const [ubicacion, setUbicacion] = useState<Ubicacion>({});
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         obtenerUbicacion();
     }, []);
 
-    const obtenerUbicacion = async () => {
+    const obtenerUbicacion = async (): Promise<void> => {
         setLoading(true);
         setError(null);
 
@@ -36,13 +43,21 @@ const UbicacionDetalle = () => {
     }
 
     return (
-        <div>
-            <h2>{ubicacion.name}</h2>
-            <p>Tipo: {ubicacion.type}</p>
-            <p>Dimensión: {ubicacion.dimension}</p>
-            <p>Fecha de creación: {ubicacion.created}</p>
-
-            <Link to="/ubicaciones">Volver a las ubicaciones</Link>
+        <div className="container">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <div className="card mt-5">
+                        <div className="card-body">
+                            <h5 className="card-title">{ubicacion.name}</h5>
+                            <hr />
+                            <p className="card-text">Tipo: {ubicacion.type}</p>
+                            <p className="card-text">Dimensión: {ubicacion.dimension}</p>
+                            <p className="card-text">Fecha de creación: {ubicacion.created}</p>
+                            <Link to="/ubicaciones" className="btn btn-primary">Volver a las ubicaciones</Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

@@ -1,37 +1,50 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
-const EpisodioDetalles = () => {
+interface Character {
+    id: number;
+    name: string;
+    image: string;
+    species: string;
+}
+
+interface Episode {
+    name: string;
+    season: string;
+    characters: string[];
+}
+
+const EpisodioDetalles = (): JSX.Element => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [episodio, setEpisodio] = useState(null);
-    const [personajes, setPersonajes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [episodio, setEpisodio] = useState<Episode | null>(null);
+    const [personajes, setPersonajes] = useState<Character[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         obtenerDetallesEpisodio();
     }, []);
 
-    const obtenerDetallesEpisodio = async () => {
+    const obtenerDetallesEpisodio = async (): Promise<void> => {
         setLoading(true);
         setError(null);
 
         try {
             const respuestaEpisodio = await fetch(`https://rickandmortyapi.com/api/episode/${id}`);
-            const datosEpisodio = await respuestaEpisodio.json();
+            const datosEpisodio: Episode = await respuestaEpisodio.json();
 
             setEpisodio(datosEpisodio);
             setLoading(false);
 
             const personajePromises = datosEpisodio.characters.map(async (personajeUrl) => {
                 const respuestaPersonaje = await fetch(personajeUrl);
-                const datosPersonaje = await respuestaPersonaje.json();
+                const datosPersonaje: Character = await respuestaPersonaje.json();
                 return datosPersonaje;
             });
 
             Promise.all(personajePromises)
-                .then((personajesData) => {
+                .then((personajesData: Character[]) => {
                     setPersonajes(personajesData);
                 })
                 .catch((error) => {
@@ -43,7 +56,7 @@ const EpisodioDetalles = () => {
         }
     };
 
-    const handleVerDetalle = (personajeId) => {
+    const handleVerDetalle = (personajeId: number): void => {
         navigate(`/personajes/${personajeId}`);
     };
 
@@ -56,23 +69,29 @@ const EpisodioDetalles = () => {
     }
 
     return (
-        <div>
-            <h2>{episodio.name}</h2>
-            <p>Temporada: {episodio.season}</p>
+        <div className="container mt-4">
+            <div className="text-center mb-4"> 
+            <h2 style={{ fontWeight: 'bold', fontSize: '30px', marginBottom: '20px' }}>{episodio?.name}</h2>
+            </div>
             <h3>Personajes que aparecen en el episodio:</h3>
-            <ul>
+            <div className="row">
                 {personajes.map((personaje) => (
-                    <li key={personaje.id}>
-                        <img src={personaje.image} alt={personaje.name} />
-                        <p>{personaje.name}</p>
-                        <p>Especie: {personaje.species}</p>
-                        <button onClick={() => handleVerDetalle(personaje.id)}>Ver Detalle</button>
-                    </li>
+                    <div className="col-sm-6 col-md-4 col-lg-3 mb-4" key={personaje.id}>
+                        <div className="card">
+                            <img src={personaje.image} className="card-img-top" alt={personaje.name} />
+                            <div className="card-body">
+                                <h5 className="card-title">{personaje.name}</h5>
+                                <p className="card-text">Especie: {personaje.species}</p>
+                                <button className="btn btn-primary" onClick={() => handleVerDetalle(personaje.id)}>Ver Detalle</button>
+                            </div>
+                        </div>
+                    </div>
                 ))}
-            </ul>
-            <Link to="/episodios">Volver a Episodios</Link>
+            </div>
+            <hr />
+            <Link to="/episodios" className="justify-content-center btn btn-danger mb-4">Volver a Episodios</Link>
         </div>
     );
 };
 
-export default EpisodioDetalles;
+export default EpisodioDetalles

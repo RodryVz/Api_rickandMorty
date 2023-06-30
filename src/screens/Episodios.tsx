@@ -62,8 +62,9 @@ const Episodios = (): JSX.Element => {
                     <div className="col" key={episodio.id}>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">{episodio.name}</h5>
+                                <h5 className="card-title"><b>Nobre Episodio: </b>{episodio.name}</h5>
                                 <p className="card-text">Episodio: {episodio.episode}</p>
+                                <hr />
                                 <Link to={`/episodios/${episodio.id}`} className="btn btn-primary">
                                     Ver más
                                 </Link>
